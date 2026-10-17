@@ -20,11 +20,10 @@ Este proyecto documenta, paso a paso, el proceso de **virtualización** con **Or
 
 ## Estructura del repositorio
 
-```
 TrabajoIntegrador-Virtualizacion/
 ├── README.md
-└── capturas-virtualbox/   # capturas de la creación y configuración de la VM
-```
+├── capturas-virtualbox/   # capturas de VirtualBox: versión, creación de la VM y red
+└── capturas-ubuntu/       # capturas dentro de Ubuntu Server: instalación y comandos
 
 ## Desarrollo paso a paso
 
@@ -99,4 +98,37 @@ sudo apt update
 
 El primero termina cualquier configuración de paquetes que haya quedado pendiente, y no mostró cambios. El segundo descargó la lista de paquetes desde los repositorios oficiales de Ubuntu, lo que confirma que la máquina virtual tiene acceso a Internet a través de la red en modo Bridge. El aviso sobre el repositorio `file:/cdrom` corresponde a la imagen ISO de instalación, que ya no está montada, y no afecta el funcionamiento.
 
-![Resultado de apt update](capturas-ubuntu/13-apt-update.png)
+![Resultado de apt update](capturas-ubuntu/12-apt-update.png)
+
+### Paso 6: Verificación de Python
+
+Se comprobó la versión de Python instalada en la máquina virtual. Ubuntu Server incluye Python 3 por defecto, por lo que no fue necesario instalarlo:
+
+```bash
+python3 --version
+```
+
+El resultado fue **Python 3.14.4**.
+
+![Versión de Python](capturas-ubuntu/13-python-version.png)
+
+### Paso 7: Acceso remoto a la VM por SSH
+
+Se instaló el servidor OpenSSH en la máquina virtual para poder trabajar con ella desde Windows, por ejemplo, para copiar y pegar el código del programa:
+
+```bash
+sudo apt install -y openssh-server
+```
+
+Como la VM está en modo Bridge, tiene su propia dirección IP en la red local (`192.168.0.104`), y desde PowerShell en el equipo anfitrión se conecta con:
+
+```powershell
+ssh camilo@192.168.0.104
+```
+
+![Conexión SSH desde Windows](capturas-ubuntu/14-ssh-conexion.png)
+
+En Ubuntu el servicio `ssh` se activa mediante un socket, por lo que arranca con la primera conexión. Con la sesión abierta, el estado del servicio es **active (running)**, y el registro muestra la conexión aceptada desde la IP del equipo anfitrión (`192.168.0.102`), distinta de la de la VM:
+
+![Estado del servicio SSH](capturas-ubuntu/15-ssh-estado.png)
+
