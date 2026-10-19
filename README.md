@@ -132,3 +132,30 @@ En Ubuntu el servicio `ssh` se activa mediante un socket, por lo que arranca con
 
 ![Estado del servicio SSH](capturas-ubuntu/15-ssh-estado.png)
 
+### Paso 8: Creación y ejecución del programa de promedios
+
+Dentro de la máquina virtual se creó una carpeta de trabajo y, con el editor `nano`, el archivo `promedio.py`. El código se copió desde el equipo anfitrión y se pegó en el editor a través de la sesión SSH:
+
+```bash
+mkdir -p ~/proyecto
+cd ~/proyecto
+nano promedio.py
+```
+
+El programa pide notas por teclado hasta que se escribe `stop`. Acepta notas de 0 a 10, con decimales (con punto o con coma), rechaza texto y valores fuera de rango, y al final muestra las notas ingresadas y su promedio con dos decimales. El código está comentado y se encuentra en [`codigo/promedio.py`](codigo/promedio.py).
+
+![Código del programa en nano](capturas-ubuntu/16-nano-codigo.png)
+
+Para probarlo se ejecutó con `python3 promedio.py` y se ingresaron las notas `8`, `7,5` y `10`, además de dos entradas inválidas (`abc` y `11`) para comprobar las validaciones. El programa rechazó ambas y, al escribir `stop`, calculó el promedio correcto: **8.50**.
+
+```bash
+python3 promedio.py
+```
+
+![Ejecución del programa](capturas-ubuntu/17-ejecucion-programa.png)
+
+### Paso 9: Instantánea (snapshot) de la máquina virtual
+
+Con la máquina virtual apagada y el programa de promedios funcionando, se tomó una instantánea desde la pestaña **Instantáneas** de VirtualBox, con el nombre *Programa de Promedios funcionando*. Una instantánea guarda el estado completo de la VM (disco y configuración) en ese momento, de modo que si más adelante algo falla se puede volver a este punto sin reinstalar nada.
+
+![Instantánea de la máquina virtual](capturas-virtualbox/18-snapshot.png)
