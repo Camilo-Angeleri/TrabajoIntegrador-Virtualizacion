@@ -9,7 +9,14 @@ Tecnicatura Universitaria en Programación a Distancia (UTN)
 
 ## Descripción del proyecto
 
-Este proyecto documenta, paso a paso, el proceso de **virtualización** con **Oracle VirtualBox**, instalando una máquina virtual con **Ubuntu Server** sobre un equipo anfitrión con Windows.
+Este proyecto documenta, paso a paso, el proceso de **virtualización** con **Oracle VirtualBox**: se instala una máquina virtual con **Ubuntu Server** sobre un equipo anfitrión con Windows, se configura su red en modo Bridge y se accede a ella por SSH. Dentro de la máquina virtual se crea y ejecuta un programa en **Python** que calcula el promedio de una lista de notas.
+
+## Objetivo del trabajo
+
+- Configurar VirtualBox como base del entorno de trabajo.
+- Instalar Linux (Ubuntu Server) en un entorno virtual.
+- Ejecutar una aplicación en Python que calcule promedios.
+- Documentar el proceso con capturas de pantalla, un informe técnico y este repositorio.
 
 ## Herramientas utilizadas
 
@@ -17,13 +24,24 @@ Este proyecto documenta, paso a paso, el proceso de **virtualización** con **Or
 |---|---|---|
 | Oracle VirtualBox | 7.2.2 | Hipervisor tipo 2 para crear la VM |
 | Ubuntu Server | 26.04.1 LTS | Sistema operativo invitado (guest) |
+| Python | 3.14.4 | Lenguaje del programa de promedios |
+| OpenSSH server | Paquete de Ubuntu | Acceso remoto a la VM desde Windows |
+| nano | 8.7.1 | Editor de texto en la terminal |
+| Windows PowerShell | - | Cliente SSH en el equipo anfitrión |
+| Git, GitHub y GitHub Desktop | - | Control de versiones y publicación del trabajo |
 
 ## Estructura del repositorio
 
+```
 TrabajoIntegrador-Virtualizacion/
 ├── README.md
-├── capturas-virtualbox/   # capturas de VirtualBox: versión, creación de la VM y red
-└── capturas-ubuntu/       # capturas dentro de Ubuntu Server: instalación y comandos
+├── capturas-virtualbox/   # capturas de VirtualBox: versión, ISO, creación de la VM, red y snapshot
+├── capturas-ubuntu/       # capturas dentro de Ubuntu Server: instalación, Python, SSH y programa
+├── codigo/
+│   └── promedio.py        # programa de promedios
+└── documento/
+    └── TPI-Virtualizacion.pdf   # informe técnico
+```
 
 ## Desarrollo paso a paso
 
@@ -159,3 +177,50 @@ python3 promedio.py
 Con la máquina virtual apagada y el programa de promedios funcionando, se tomó una instantánea desde la pestaña **Instantáneas** de VirtualBox, con el nombre *Programa de Promedios funcionando*. Una instantánea guarda el estado completo de la VM (disco y configuración) en ese momento, de modo que si más adelante algo falla se puede volver a este punto sin reinstalar nada.
 
 ![Instantánea de la máquina virtual](capturas-virtualbox/18-snapshot.png)
+
+## Resultados obtenidos
+
+- Se creó una máquina virtual funcional con Ubuntu Server 26.04.1 LTS, con 2 GB de RAM, 2 procesadores y 20 GB de disco.
+- La red en modo Bridge le asignó a la VM una IP propia de la red local (`192.168.0.104`), distinta de la del equipo anfitrión (`192.168.0.102`), y permitió acceder a ella por SSH desde Windows.
+- Python 3.14.4 ya estaba disponible en el sistema. El programa de promedios se creó y se ejecutó correctamente, con validación de las entradas: con las notas 8, 7,5 y 10 devolvió el promedio esperado, 8.50.
+- Se tomó una instantánea de la máquina virtual con el trabajo terminado.
+
+## Conclusiones
+
+### Aprendizaje
+
+- Cómo funciona un hipervisor de tipo 2 y cómo se crea y configura una máquina virtual (ISO, recursos, disco y red).
+- La diferencia entre los modos de red NAT y Bridge, y por qué con Bridge la VM es visible desde la red local.
+- Cómo trabajar con un sistema sin entorno gráfico: terminal, `apt`, `nano`, `systemctl` y SSH.
+- Que Ubuntu Server ya incluye Python 3 y que el comando es `python3` (`python` no existe por defecto).
+
+### Dificultades
+
+- **La instalación se interrumpió en la etapa final.** El instalador falló en dos intentos durante la descarga de actualizaciones, probablemente por una conexión Wi-Fi inestable, aunque el sistema base ya estaba instalado. Después, la VM quedó mucho tiempo en el reinicio. Se resolvió apagándola y configurando el orden de arranque con el disco duro primero, y el sistema inició correctamente.
+- **Dirección IP dinámica.** El router asigna la IP por DHCP y cambió entre una instalación y otra (`192.168.0.106` y `192.168.0.104`), por lo que hay que confirmarla con `ip -4 addr` antes de conectarse.
+- **SSH por activación de socket.** Recién instalado, `ssh.service` figuraba como `inactive (dead)`. Es el comportamiento normal de Ubuntu, que lo inicia con la primera conexión mediante `ssh.socket`.
+- **Aviso en `apt update`.** Mostró un error por el repositorio `file:/cdrom`, que corresponde a la ISO de instalación ya desmontada, sin afectar el funcionamiento.
+
+### Beneficios
+
+- Entorno aislado: se instala y prueba un sistema completo sin modificar el equipo físico.
+- Las instantáneas permiten volver a un estado anterior sin reinstalar.
+- Con la red Bridge, la VM se comporta como un equipo más de la red, útil para practicar administración remota.
+- No requiere hardware adicional.
+
+### Mejoras
+
+- Aplicar las actualizaciones de seguridad pendientes (`apt upgrade`) cuando la conexión sea estable.
+- Asignar una IP fija, o una reserva en el router, para que la VM no cambie de dirección.
+- Usar autenticación SSH con clave pública en lugar de contraseña.
+- Mejorar el programa de promedios: guardar las notas en un archivo, calcular promedios ponderados o cargar las notas desde un archivo.
+
+## Video explicativo
+
+_(agregar el link al video)_
+
+## Bibliografía
+
+- Rigoni, C. (2026). *Unidad 7: Virtualización*. Material de cátedra, Arquitectura y Sistemas Operativos, Tecnicatura Universitaria en Programación a Distancia, UTN (PDF del campus virtual).
+- Rigoni, C. (2026). *Virtualización de recursos por un hipervisor Tipo 2*. Material de cátedra, Arquitectura y Sistemas Operativos, Tecnicatura Universitaria en Programación a Distancia, UTN (PDF del campus virtual).
+- Cátedra de Arquitectura y Sistemas Operativos (2026). *Virtualización BIOS/UEFI*. Material de cátedra, Tecnicatura Universitaria en Programación a Distancia, UTN (PDF del campus virtual).
